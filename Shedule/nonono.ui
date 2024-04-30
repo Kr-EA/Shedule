@@ -29,7 +29,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Нет-нет-нет</string>
+      <string>Внимание</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
