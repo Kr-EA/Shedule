@@ -1,0 +1,11 @@
+release/dialog.o
+release/main.o
+release/mainwindow.o
+release/setsubjects.o
+release/tdialog.o
+release/shedule_plugin_import.o
+release/qrc_qmake_qmake_qm_files.o
+release/moc_dialog.o
+release/moc_mainwindow.o
+release/moc_setsubjects.o
+release/moc_tdialog.o

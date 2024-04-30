@@ -1,0 +1,11 @@
+debug/dialog.o
+debug/main.o
+debug/mainwindow.o
+debug/setsubjects.o
+debug/tdialog.o
+debug/shedule_plugin_import.o
+debug/qrc_qmake_qmake_qm_files.o
+debug/moc_dialog.o
+debug/moc_mainwindow.o
+debug/moc_setsubjects.o
+debug/moc_tdialog.o

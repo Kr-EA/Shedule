@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>setSubjects</class>
+ <widget class="QDialog" name="setSubjects">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>GOST type A</family>
+    <pointsize>14</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QHBoxLayout" name="subject1">
+     <item>
+      <layout class="QHBoxLayout" name="layout" stretch="10,50">
+       <item>
+        <widget class="QLabel" name="sub1">
+         <property name="text">
+          <string>Предмет 1</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="setSub1">
+         <property name="currentText">
+          <string/>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::InsertPolicy::InsertAtBottom</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="subject2">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="10,50">
+       <item>
+        <widget class="QLabel" name="sub2">
+         <property name="text">
+          <string>Предмет 2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="setSub2"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="subject3">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="10,50">
+       <item>
+        <widget class="QLabel" name="sub3">
+         <property name="text">
+          <string>Предмет 3</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="setSub3"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="subject4">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="10,50">
+       <item>
+        <widget class="QLabel" name="sub4">
+         <property name="text">
+          <string>Предмет 4</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="setSub4"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="subject5">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="10,50">
+       <item>
+        <widget class="QLabel" name="sub5">
+         <property name="text">
+          <string>Предмет 5</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="setSub5"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="exit">
+     <item>
+      <widget class="QPushButton" name="confirm">
+       <property name="text">
+        <string>Ок</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancel">
+       <property name="text">
+        <string>Отмена</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
