@@ -28,6 +28,7 @@ class MainWindow : public QMainWindow
     };
 
 public:
+    QVector<QString> uids;
     QVector<QString> subjectData;
     QVector<QString> teacherData;
     MainWindow(QWidget *parent = nullptr);
@@ -66,6 +67,12 @@ private slots:
     void on_searchTeacherLine_textChanged(const QString &arg1);
 
     void on_teachersData_cellChanged(int row, int column);
+
+    void on_expandAndCollapse_clicked();
+
+    void on_searchGroup_clicked();
+
+    void on_addGroup_clicked();
 
 private:
     Ui::MainWindow *ui;

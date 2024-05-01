@@ -6,6 +6,7 @@
 #include<QVector>
 #include<QDebug>
 #include"setsubjects.h"
+#include"UIDgenerator.h"
 
 using namespace std;
 
@@ -15,6 +16,7 @@ tDialog::tDialog(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowTitle(QString::fromStdString("Добавление преподавателя"));
+    log = generateUID(uids).toStdString() + " ";
 }
 
 tDialog::~tDialog()
@@ -54,7 +56,7 @@ void tDialog::on_confirm_clicked()
     std::replace(lastname.begin(), lastname.end(), ' ',  '_');
     std::replace(name.begin(), name.end(), ' ',  '_');
     std::replace(surname.begin(), surname.end(), ' ',  '_') ;
-    log = lastname + " " + name + " " + surname + " " + to_string(rating);
+    log += lastname + " " + name + " " + surname + " " + to_string(rating);
     if (surname.length() != 0 && name.length() != 0 && lastname.length() != 0 && amountOfSubjects != 0){
         dialogChild->setAmount(amountOfSubjects);
         dialogChild->setup(data);

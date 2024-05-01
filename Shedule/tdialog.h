@@ -13,6 +13,7 @@ class tDialog : public QDialog
     Q_OBJECT
 
 public:
+    QVector<QString> uids;
     explicit tDialog(QWidget *parent = nullptr);
     ~tDialog();
     bool isWindowCalled = false;

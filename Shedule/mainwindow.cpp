@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->searchInput->setVisible(false);
     ui->searchTeacherLine->setVisible(false);
     ui->returnAllSubjects->setVisible(false);
+    ui->searchGroupLine->setVisible(false);
     this->setWindowTitle(QString::fromStdString("Шедуля"));
 }
 
@@ -44,6 +45,7 @@ void MainWindow::on_addSubjectButton_clicked()
     ui->subjectsData->setSortingEnabled(false);
     ui->sortSubjectDataButton->setText("Сортировка (предметы): ВЫКЛ");
     Dialog subCreator;
+    subCreator.uids = this->uids;
     subCreator.savedData = &subjectData;
     subCreator.setModal(true);
     subCreator.exec();
@@ -54,6 +56,7 @@ void MainWindow::on_addSubjectButton_clicked()
     }
     saveData(QString("Subjects.txt"), subjectData);
     subjectDataSetup();
+    this->uids.push_back(subCreator.log.mid(0, 6));
 }
 
 
@@ -62,6 +65,7 @@ void MainWindow::on_addTeacherButton_clicked()
     ui->teachersData->setSortingEnabled(false);
     ui->sortTeacherButton->setText("Сортировка (преподаватели): ВЫКЛ");
     tDialog* teacherCreator = new tDialog();
+    teacherCreator->uids = this->uids;
     teacherCreator->dialogChild = new setSubjects();
     connect(teacherCreator->dialogChild, &setSubjects::subjectsListReadySignal, teacherCreator, &tDialog::subjectsListSlot);
     teacherCreator->setModal(true);
@@ -74,6 +78,7 @@ void MainWindow::on_addTeacherButton_clicked()
     teacherCreator->dialogChild->setVisible(false);
     saveData(QString("Teachers.txt"), teacherData);
     teacherDataSetup();
+    this->uids.push_back(QString::fromStdString(teacherCreator->log).mid(0, 6));
 }
 
 void MainWindow::saveData(const QString& path, QVector<QString>& data){
@@ -115,15 +120,15 @@ void MainWindow::teacherDataSetup(){
             QString currentLine = teacherData[i];
             QStringList temp = currentLine.split(u' ', Qt::SkipEmptyParts);
             int size = temp.size();
-            for (int k = 0; k < temp.size(); k++){
-                if (k == 3){
+            for (int k = 1; k < temp.size(); k++){
+                if (k == 4){
                     QTableWidgetItem *tableItem = new QTableWidgetItem();
                     tableItem->setData(Qt::EditRole, temp[k].toInt());
-                    ui->teachersData->setItem(i, k, tableItem);
+                    ui->teachersData->setItem(i, k-1, tableItem);
                 }
-                else if (k == 4){
+                else if (k == 5){
                     QRadioButton* showSubjects = new QRadioButton();
-                    ui->teachersData->setCellWidget(i, k, showSubjects);
+                    ui->teachersData->setCellWidget(i, k-1, showSubjects);
                     connect(showSubjects, &QRadioButton::clicked, this, [&, showSubjects, temp](){
                         if (showSubjects->isChecked()){
                             ui->subjectsData->setSortingEnabled(false);
@@ -132,8 +137,8 @@ void MainWindow::teacherDataSetup(){
                             checkedRow = i;
                             ui->returnAllSubjects->setVisible(true);
                             toggleAllRows(false, ui->subjectsData, subjectData);
-                            for (int z = 4; z < temp.size()-2; z+=3){
-                                QString tempLine = temp[z] + " " + temp[z+1] + " " + temp[z+2];
+                            for (int z = 5; z < temp.size()-2; z+=4){
+                                QString tempLine = temp[z] + " " + temp[z+1] + " " + temp[z+2] + " " + temp[z+3];
                                 tempLine.replace("\n", "");
                                 for (int q = 0; q < subjectData.size(); q++){
                                     if (subjectData[q] == tempLine){
@@ -144,7 +149,7 @@ void MainWindow::teacherDataSetup(){
                         }
                     });
                 }
-                else if (k == 5){
+                else if (k == 6){
                     QPushButton* deleter = new QPushButton("Удалить");
                     connect(deleter, &QPushButton::clicked, this, [&, deleter, i](){
                         confirmAction allowAction;
@@ -159,15 +164,15 @@ void MainWindow::teacherDataSetup(){
                         });
                         allowAction.exec();
                     });
-                    ui->teachersData->setCellWidget(i, k, deleter);
+                    ui->teachersData->setCellWidget(i, k-1, deleter);
                 }
-                else if (k == 6){
+                else if (k == 7){
                     QPushButton* addButton = new QPushButton("Добавить предмет");
                     connect(addButton, &QPushButton::clicked, this, [&, addButton, i, size](){
                         teacherDataSetup();
                         toggleAllRows(true, ui->subjectsData, subjectData);
                         ui->returnAllSubjects->setVisible(false);
-                        if (size < 19){
+                        if (size < 26){
                             setSubjects* adder = new setSubjects();
                             adder->setAmount(1);
                             QVector<QString> choices;
@@ -191,13 +196,13 @@ void MainWindow::teacherDataSetup(){
                             alert.setVisible(true);
                         }
                     });
-                    ui->teachersData->setCellWidget(i, k, addButton);
+                    ui->teachersData->setCellWidget(i, k-1, addButton);
                 }
-                else if (k < 4) {
+                else if (k < 5) {
                     std::replace(temp[k].begin(), temp[k].end(), '_', ' ');
                     QTableWidgetItem *tableItem = new QTableWidgetItem(temp[k]);
                     std::replace(temp[k].begin(), temp[k].end(), ' ', '_');
-                    ui->teachersData->setItem(i, k, tableItem);
+                    ui->teachersData->setItem(i, k-1, tableItem);
                 }
             }
         }
@@ -219,13 +224,13 @@ void MainWindow::subjectDataSetup(){
         for (int i = 0; i < subjectData.size(); i++){
             QString currentLine = subjectData[i];
             QStringList temp = currentLine.split(u' ', Qt::SkipEmptyParts);
-            for (int k = 0; k < 4; k++){
-                if (k == 2){
+            for (int k = 1; k < 5; k++){
+                if (k == 3){
                     QTableWidgetItem *tableItem = new QTableWidgetItem();
                     tableItem->setData(Qt::EditRole, temp[k].toInt());
-                    ui->subjectsData->setItem(i, k, tableItem);
+                    ui->subjectsData->setItem(i, k-1, tableItem);
                 }
-                else if (k == 3){
+                else if (k == 4){
                     QPushButton* deleter = new QPushButton("Удалить");
                     connect(deleter, &QPushButton::clicked, this, [&, deleter, i](){
                         confirmAction allowAction;
@@ -263,12 +268,12 @@ void MainWindow::subjectDataSetup(){
                         });
                         allowAction.exec();
                     });
-                    ui->subjectsData->setCellWidget(i, k, deleter);
+                    ui->subjectsData->setCellWidget(i, k-1, deleter);
                 }
                 else{
                     std::replace(temp[k].begin(), temp[k].end(), '_', ' ');
                     QTableWidgetItem *tableItem = new QTableWidgetItem(temp[k]);
-                    ui->subjectsData->setItem(i, k, tableItem);
+                    ui->subjectsData->setItem(i, k-1, tableItem);
                 }
             }
         }
@@ -488,5 +493,41 @@ void MainWindow::on_teachersData_cellChanged(int row, int column)
     coords.x = row;
     coords.y = column;
     emit itemChanged(coords);
+}
+
+
+void MainWindow::on_expandAndCollapse_clicked()
+{
+    if (ui->expandAndCollapse->text() == "Развернуть")
+    {
+        ui->expandAndCollapse->setText("Свернуть");
+        ui->teachersAndSubjects->setVisible(false);
+        ui->groupMenu->setVisible(false);
+        ui->saveData->setVisible(false);
+    }
+    else {
+        ui->expandAndCollapse->setText("Развернуть");
+        ui->teachersAndSubjects->setVisible(true);
+        ui->groupMenu->setVisible(true);
+        ui->saveData->setVisible(true);
+    }
+}
+
+
+void MainWindow::on_searchGroup_clicked()
+{
+    if (ui->searchGroupLine->isVisible()){
+        ui->searchGroupLine->clear();
+        ui->searchGroupLine->setVisible(false);
+    }
+    else{
+        ui->searchGroupLine->setVisible(true);
+    }
+}
+
+
+void MainWindow::on_addGroup_clicked()
+{
+
 }
 

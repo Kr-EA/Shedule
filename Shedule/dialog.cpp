@@ -6,6 +6,7 @@
 #include<QFile>
 #include<QDebug>
 
+#include"UIDgenerator.h"
 #include "mainwindow.h"
 
 using namespace std;
@@ -16,6 +17,7 @@ Dialog::Dialog(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowTitle(QString::fromStdString("Добавление предмета"));
+    log = generateUID(uids) + " ";
 }
 
 Dialog::~Dialog()
@@ -63,7 +65,7 @@ void Dialog::on_confirm_clicked()
             }
         }
         isWindowCalled = true;
-        log = QString::fromStdString(subjectName) + " " + QString::fromStdString(subjectType) + " " + QString::number(hours);
+        log += QString::fromStdString(subjectName) + " " + QString::fromStdString(subjectType) + " " + QString::number(hours);
         this->setVisible(false);
     }
     else {

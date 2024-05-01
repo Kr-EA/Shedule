@@ -13,6 +13,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
+    QVector<QString> uids;
     QString log;
     QVector<QString> *savedData;
     bool isWindowCalled = false;
