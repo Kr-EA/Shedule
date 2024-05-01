@@ -1,6 +1,6 @@
 #include "dialog.h"
 #include "ui_dialog.h"
-#include "nonono.h"
+#include "alertWindow.h"
 #include<iostream>
 #include<string>
 #include<QFile>
@@ -54,7 +54,7 @@ void Dialog::on_confirm_clicked()
             QStringList separatedTemp;
             separatedTemp = temp.split(u' ', Qt::SkipEmptyParts);
             if (QString::fromStdString(subjectName).toLower() == separatedTemp[0].toLower() && QString::fromStdString(subjectType).toLower() == separatedTemp[1].toLower()){
-                NoNoNo alert;
+                alertWindow alert;
                 alert.setAlertInfo(QString::fromStdString("Такой предмет уже есть"));
                 alert.setModal(true);
                 alert.exec();
@@ -67,7 +67,7 @@ void Dialog::on_confirm_clicked()
         this->setVisible(false);
     }
     else {
-        NoNoNo alert;
+        alertWindow alert;
         alert.setAlertInfo(QString::fromStdString("Пустой ввод"));
         alert.setModal(true);
         alert.exec();

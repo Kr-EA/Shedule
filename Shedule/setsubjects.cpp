@@ -1,7 +1,7 @@
 #include "setsubjects.h"
 #include "ui_setsubjects.h"
 #include "tdialog.h"
-#include "nonono.h"
+#include "alertWindow.h"
 #include<QComboBox>
 #include<QDebug>
 #include<QVector>
@@ -82,7 +82,7 @@ void setSubjects::on_confirm_clicked()
             tempData.push_back(property);
         }
         else {
-            NoNoNo alert;
+            alertWindow alert;
             alert.setAlertInfo(QString::fromStdString("Введены одинаковые предметы"));
             alert.setModal(true);
             alert.exec();

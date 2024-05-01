@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialog.h"
-#include "nonono.h"
+#include "alertWindow.h"
 #include "tdialog.h"
 #include"confirmaction.h"
 #include "setsubjects.h"
@@ -184,7 +184,7 @@ void MainWindow::teacherDataSetup(){
                             teacherDataSetup();
                         }
                         else {
-                            NoNoNo alert;
+                            alertWindow alert;
                             alert.setAlertInfo(QString::fromStdString("Число предметов у преподавателя уже 5. \n Пожалейте человека!"));
                             alert.setModal(true);
                             alert.exec();
@@ -309,7 +309,7 @@ void MainWindow::checkItem(itemCoordinates coords){
 
     if (coords.y == 1){
         if (ui->subjectsData->item(coords.x, coords.y)->text() != "Лекция" && ui->subjectsData->item(coords.x, coords.y)->text() != "Практика"){
-            NoNoNo alert;
+            alertWindow alert;
             alert.setAlertInfo(QString::fromStdString("Некорректный ввод \n Ожидался ввод <<Лекция>> или <<Практика>>"));
             alert.setModal(true);
             alert.exec();
@@ -321,7 +321,7 @@ void MainWindow::checkItem(itemCoordinates coords){
 
     if (coords.y == 2){
         if (ui->subjectsData->item(coords.x, coords.y)->text().toInt() <= 0 || ui->subjectsData->item(coords.x, coords.y)->text().toInt() > 172){
-            NoNoNo alert;
+            alertWindow alert;
             alert.setAlertInfo(QString::fromStdString("Некорректный ввод \n Ожидалось число от 0 до 172"));
             alert.setModal(true);
             alert.exec();
@@ -333,7 +333,7 @@ void MainWindow::checkItem(itemCoordinates coords){
 
     if (coords.y == 3){
         if (ui->teachersData->item(coords.x, coords.y)->text().toInt() <= 0 || ui->teachersData->item(coords.x, coords.y)->text().toInt() > 100){
-            NoNoNo alert;
+            alertWindow alert;
             alert.setAlertInfo(QString::fromStdString("Некорректный ввод \n Ожидалось число от 0 до 100"));
             alert.setModal(true);
             alert.exec();

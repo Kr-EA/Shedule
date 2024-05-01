@@ -1,6 +1,6 @@
 #include "tdialog.h"
 #include "ui_tdialog.h"
-#include "nonono.h"
+#include "alertWindow.h"
 #include<string>
 #include<QString>
 #include<QVector>
@@ -63,7 +63,7 @@ void tDialog::on_confirm_clicked()
         dialogChild->exec();
     }
     else {
-        NoNoNo alert;
+        alertWindow alert;
         alert.setAlertInfo(QString::fromStdString("Пустой ввод"));
         alert.setModal(true);
         alert.exec();

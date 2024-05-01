@@ -9,27 +9,27 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    alertWindow.cpp \
     confirmaction.cpp \
     dialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    nonono.cpp \
     setsubjects.cpp \
     tdialog.cpp
 
 HEADERS += \
+    alertWindow.h \
     confirmaction.h \
     dialog.h \
     mainwindow.h \
-    nonono.h \
     setsubjects.h \
     tdialog.h
 
 FORMS += \
+    alertWindow.ui \
     confirmaction.ui \
     dialog.ui \
     mainwindow.ui \
-    nonono.ui \
     setsubjects.ui \
     tdialog.ui
 
