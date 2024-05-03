@@ -48,7 +48,7 @@ private slots:
 
     void on_saveData_clicked();
 
-    void checkItem(itemCoordinates);
+    void checkItem(itemCoordinates, QString);
 
     void on_subjectsData_cellChanged(int row, int column);
 
@@ -78,7 +78,7 @@ private:
     Ui::MainWindow *ui;
 
 signals:
-    void itemChanged(itemCoordinates);
+    void itemChanged(itemCoordinates, QString);
 };
 
 #endif // MAINWINDOW_H

@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->returnAllSubjects->setVisible(false);
     ui->searchGroupLine->setVisible(false);
     this->setWindowTitle(QString::fromStdString("Шедуля"));
+    connect(this, &MainWindow::itemChanged, this, &MainWindow::checkItem);
 }
 
 MainWindow::~MainWindow()
@@ -108,7 +109,6 @@ void MainWindow::loadData(const QString& path, QVector<QString>& data){
 
 void MainWindow::teacherDataSetup(){
     ui->teachersData->setAlternatingRowColors(true);
-    connect(this, &MainWindow::itemChanged, this, &MainWindow::checkItem);
     ui->teachersData->blockSignals(true);
     ui->teachersData->setColumnCount(7);
     ui->teachersData->setRowCount(teacherData.size());
@@ -212,7 +212,7 @@ void MainWindow::teacherDataSetup(){
 }
 
 void MainWindow::subjectDataSetup(){
-    connect(this, &MainWindow::itemChanged, this, &MainWindow::checkItem);
+
     ui->subjectsData->setAlternatingRowColors(true);
     ui->subjectsData->blockSignals(true);
     ui->subjectsData->setColumnCount(4);
@@ -300,16 +300,37 @@ void MainWindow::on_saveData_clicked()
     for (int i = 0; i < subjectData.size(); i++){
         string name = ui->subjectsData->item(i, 0)->text().toStdString();
         std::replace(name.begin(), name.end(), ' ', '_');
-        QString temp = QString::fromStdString(name + " " +  ui->subjectsData->item(i, 1)->text().toStdString() + " " + ui->subjectsData->item(i,  2)->text().toStdString());
+        QString temp = QString::fromStdString(subjectData[i].mid(0, 6).toStdString() + " " + name + " " +  ui->subjectsData->item(i, 1)->text().toStdString() + " " + ui->subjectsData->item(i,  2)->text().toStdString());
         subjectData[i] = temp;
     }
     saveData(QString("Subjects.txt"), subjectData);
 
+    for (int i = 0; i < teacherData.size(); i++){
+        QStringList line = teacherData[i].split(u' ', Qt::SkipEmptyParts);
+        string uid = line[0].toStdString();
+        string name = ui->teachersData->item(i, 0)->text().toStdString();
+        std::replace(name.begin(), name.end(), ' ', '_');
+        string lastname = ui->teachersData->item(i, 1)->text().toStdString();
+        std::replace(lastname.begin(), lastname.end(), ' ', '_');
+        string surname = ui->teachersData->item(i, 2)->text().toStdString();
+        std::replace(surname.begin(), surname.end(), ' ', '_');
+        string rating = ui->teachersData->item(i, 3)->text().toStdString();
+        string temp = uid + " " + name + " " + lastname + " " + surname + " " + rating + " ";
+        for (int j = 5; j < line.size()-3; j+=4){
+            qDebug() << QString::fromStdString(line[j].toStdString() + " " + line[j+1].toStdString() + " " + line[j+2].toStdString() + " " + line[j+3].toStdString());
+            temp += line[j].toStdString() + " " + line[j+1].toStdString() + " " + line[j+2].toStdString() + " " + line[j+3].toStdString();
+            if (j != line.size()-4){
+                temp += " ";
+            }
+        }
+        teacherData[i] = QString::fromStdString(temp);
+        saveData("Teachers.txt", teacherData);
+    }
+
     saveData(QString("Teachers.txt"), teacherData);
 }
 
-void MainWindow::checkItem(itemCoordinates coords){
-
+void MainWindow::checkItem(itemCoordinates coords, QString senderName){
     ui->searchInput->clear();
     toggleAllRows(true, ui->subjectsData, subjectData);
 
@@ -348,6 +369,15 @@ void MainWindow::checkItem(itemCoordinates coords){
             ui->teachersData->item(coords.x, coords.y)->setText(temp[3]);
         }
     }
+    if (senderName == "Subject"){
+        QStringList subject = subjectData[coords.x].split(u' ', Qt::SkipEmptyParts);
+        QString oldSubject = subjectData[coords.x];
+        QString temp = subjectData[coords.x].replace(subject[coords.y+1], ui->subjectsData->item(coords.x, coords.y)->text());
+        for (int i = 0; i < teacherData.size(); i++){
+            teacherData[i] = teacherData[i].replace(oldSubject, temp);
+        }
+        teacherDataSetup();
+    }
 }
 
 void MainWindow::on_subjectsData_cellChanged(int row, int column)
@@ -355,7 +385,7 @@ void MainWindow::on_subjectsData_cellChanged(int row, int column)
     itemCoordinates coords;
     coords.x = row;
     coords.y = column;
-    emit itemChanged(coords);
+    emit itemChanged(coords, "Subject");
 }
 
 void MainWindow::on_searchSubjectDataButton_clicked()
@@ -493,7 +523,7 @@ void MainWindow::on_teachersData_cellChanged(int row, int column)
     itemCoordinates coords;
     coords.x = row;
     coords.y = column;
-    emit itemChanged(coords);
+    emit itemChanged(coords, "Teacher");
 }
 
 
