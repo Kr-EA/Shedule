@@ -13,6 +13,7 @@ SOURCES += \
     alertWindow.cpp \
     confirmaction.cpp \
     dialog.cpp \
+    groupcreator.cpp \
     main.cpp \
     mainwindow.cpp \
     setsubjects.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     alertWindow.h \
     confirmaction.h \
     dialog.h \
+    groupcreator.h \
     mainwindow.h \
     setsubjects.h \
     tdialog.h
@@ -31,6 +33,7 @@ FORMS += \
     alertWindow.ui \
     confirmaction.ui \
     dialog.ui \
+    groupcreator.ui \
     mainwindow.ui \
     setsubjects.ui \
     tdialog.ui

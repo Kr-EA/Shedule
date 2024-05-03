@@ -13,6 +13,7 @@
 #include<QRadioButton>
 #include<QTextStream>
 #include <QKeyEvent>
+#include"groupcreator.h"
 
 using namespace std;
 
@@ -528,6 +529,13 @@ void MainWindow::on_searchGroup_clicked()
 
 void MainWindow::on_addGroup_clicked()
 {
+    groupCreator* adder = new groupCreator();
+    adder->subjects = subjectData;
+    adder->setup();
+    adder->setModal(true);
+    adder->setVisible(true);
+    adder->exec();
+
 
 }
 
