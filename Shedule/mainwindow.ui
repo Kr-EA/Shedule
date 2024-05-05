@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1241</width>
+    <width>1261</width>
     <height>600</height>
    </rect>
   </property>
@@ -69,15 +69,24 @@
                 <x>0</x>
                 <y>0</y>
                 <width>552</width>
-                <height>190</height>
+                <height>180</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
                <item>
                 <widget class="QTableWidget" name="subjectsData">
+                 <property name="gridStyle">
+                  <enum>Qt::PenStyle::SolidLine</enum>
+                 </property>
                  <property name="columnCount">
                   <number>0</number>
                  </property>
+                 <attribute name="horizontalHeaderHighlightSections">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderHighlightSections">
+                  <bool>false</bool>
+                 </attribute>
                 </widget>
                </item>
               </layout>
@@ -138,12 +147,19 @@
                 <x>0</x>
                 <y>0</y>
                 <width>648</width>
-                <height>150</height>
+                <height>140</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
                <item>
-                <widget class="QTableWidget" name="teachersData"/>
+                <widget class="QTableWidget" name="teachersData">
+                 <attribute name="horizontalHeaderHighlightSections">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderHighlightSections">
+                  <bool>false</bool>
+                 </attribute>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -178,7 +194,20 @@
      <widget class="QWidget" name="widget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QTableWidget" name="tableWidget"/>
+        <widget class="QTableWidget" name="groups">
+         <attribute name="horizontalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="horizontalHeaderHighlightSections">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderHighlightSections">
+          <bool>true</bool>
+         </attribute>
+        </widget>
        </item>
        <item>
         <widget class="QWidget" name="groupMenu" native="true">
@@ -220,7 +249,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1241</width>
+     <width>1261</width>
      <height>29</height>
     </rect>
    </property>

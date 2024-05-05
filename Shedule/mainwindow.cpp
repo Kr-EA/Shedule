@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     subjectDataSetup();
     teacherDataSetup();
+    groupDataSetup();
     ui->searchInput->setVisible(false);
     ui->searchTeacherLine->setVisible(false);
     ui->returnAllSubjects->setVisible(false);
@@ -211,6 +212,18 @@ void MainWindow::teacherDataSetup(){
     ui->teachersData->blockSignals(false);
 }
 
+void MainWindow::groupDataSetup(){
+    ui->groups->setColumnCount(groups.size());
+    ui->groups->setRowCount(1);
+    ui->groups->setRowHeight(0, ui->groups->height());
+    int counter = 0;
+    for (QTableWidget* group : groups){
+        ui->groups->setColumnWidth(counter, 950);
+        ui->groups->setCellWidget(0, counter, group);
+        counter++;
+    }
+}
+
 void MainWindow::subjectDataSetup(){
 
     ui->subjectsData->setAlternatingRowColors(true);
@@ -317,7 +330,6 @@ void MainWindow::on_saveData_clicked()
         string rating = ui->teachersData->item(i, 3)->text().toStdString();
         string temp = uid + " " + name + " " + lastname + " " + surname + " " + rating + " ";
         for (int j = 5; j < line.size()-3; j+=4){
-            qDebug() << QString::fromStdString(line[j].toStdString() + " " + line[j+1].toStdString() + " " + line[j+2].toStdString() + " " + line[j+3].toStdString());
             temp += line[j].toStdString() + " " + line[j+1].toStdString() + " " + line[j+2].toStdString() + " " + line[j+3].toStdString();
             if (j != line.size()-4){
                 temp += " ";
@@ -535,13 +547,15 @@ void MainWindow::on_expandAndCollapse_clicked()
         ui->teachersAndSubjects->setVisible(false);
         ui->groupMenu->setVisible(false);
         ui->saveData->setVisible(false);
+        ui->groups->setRowHeight(0, ui->groups->height()*3.14);
     }
     else {
         ui->expandAndCollapse->setText("Развернуть");
         ui->teachersAndSubjects->setVisible(true);
         ui->groupMenu->setVisible(true);
         ui->saveData->setVisible(true);
-    }
+        ui->groups->setRowHeight(0, ui->groups->height());
+    }   
 }
 
 
@@ -561,11 +575,37 @@ void MainWindow::on_addGroup_clicked()
 {
     groupCreator* adder = new groupCreator();
     adder->subjects = subjectData;
+    adder->teachers = teacherData;
     adder->setup();
     adder->setModal(true);
     adder->setVisible(true);
     adder->exec();
+    if (adder->isWindowWorkFinishedCorrectly){
+        groups.push_back(adder->data);
+        groupDataSetup();
+    }
+}
 
 
+void MainWindow::on_searchGroupLine_textEdited(const QString &arg1)
+{
+    if (arg1.size() != 0){
+        for (int i = 0; i < groups.size(); i++){
+            for (int j = 0; j < groups[i]->item(0, 0)->text().size()-arg1.length()+1; j++){
+                if (groups[i]->item(0,0)->text().mid(j, arg1.size()) == arg1){
+                    ui->groups->showColumn(i);
+                    break;
+                }
+                else {
+                    ui->groups->hideColumn(i);
+                }
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < groups.size(); i++){
+            ui->groups->showColumn(i);
+        }
+    }
 }
 

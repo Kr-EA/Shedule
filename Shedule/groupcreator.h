@@ -3,6 +3,7 @@
 #include<QTableWidget>
 #include <QDialog>
 #include <QVector>
+#include<QComboBox>
 #include <QString>
 
 namespace Ui {
@@ -14,8 +15,13 @@ class groupCreator : public QDialog
     Q_OBJECT
 
 public:
+    QVector<QString> days;
+    QWidget* tempWidget{};
+    bool isWindowWorkFinishedCorrectly{};
     QTableWidget* data;
     QVector<QString> subjects;
+    QVector<QString> teachers;
+    QComboBox* setupTeacherComboBox(QString, QVector<QString>);
     explicit groupCreator(QWidget *parent = nullptr);
     ~groupCreator();
 

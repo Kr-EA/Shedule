@@ -29,6 +29,7 @@ class MainWindow : public QMainWindow
 
 public:
     QVector<QString> uids;
+    QVector<QTableWidget*> groups;
     QVector<QString> subjectData;
     QVector<QString> teacherData;
     MainWindow(QWidget *parent = nullptr);
@@ -36,6 +37,7 @@ public:
     void loadData(const QString&, QVector<QString>&);
     int checkedRow;
     void subjectDataSetup();
+    void groupDataSetup();
     void teacherDataSetup();
     ~MainWindow();
 
@@ -73,6 +75,8 @@ private slots:
     void on_searchGroup_clicked();
 
     void on_addGroup_clicked();
+
+    void on_searchGroupLine_textEdited(const QString &arg1);
 
 private:
     Ui::MainWindow *ui;
