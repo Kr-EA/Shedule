@@ -23,14 +23,18 @@ groupCreator::~groupCreator()
 }
 
 QComboBox* groupCreator::setupTeacherComboBox(QString subject, QVector<QString> teachers){
+    QStringList teacherVars;
     QComboBox* dropDownTeachers = new QComboBox();
     QVector<QString> correctTeachers{};
+    if (subject == "-"){
+        dropDownTeachers->addItem("-");
+    }
     for (QString teacher : teachers){
         if (teacher.toStdString().find(subject.toStdString()) != 18446744073709551615){
             correctTeachers.push_back(teacher);
         }
     }
-    QStringList teacherVars = QStringList::fromVector(correctTeachers);
+    teacherVars = QStringList::fromVector(correctTeachers);
     dropDownTeachers->addItems(teacherVars);
     return dropDownTeachers;
 }

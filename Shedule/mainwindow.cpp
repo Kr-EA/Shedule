@@ -4,6 +4,7 @@
 #include "alertWindow.h"
 #include "tdialog.h"
 #include"confirmaction.h"
+#include"UIDgenerator.h"
 #include "setsubjects.h"
 #include<iostream>
 #include<vector>
@@ -218,31 +219,53 @@ void MainWindow::groupDataSetup(){
     ui->groups->setRowHeight(0, ui->groups->height());
     int counter = 0;
 
-
-
     for (QTableWidget* group : groups){
         ui->groups->setColumnWidth(counter, 950);
         ui->groups->setCellWidget(0, counter, group);
+        counter++;
+    }
+}
+void MainWindow::saveGroupData(){
+    for (QTableWidget* group : groups){
+        QString data;
+        data = generateUID(uids) + "@";
+        data += group->item(0, 0)->text() + "@{";
 
         QWidget* temp;
 
         for (int i = 1; i < 7; i++) {
+            data += "[";
             temp = group->cellWidget(i, 1);
 
             QList<QGridLayout*> subWidgets = temp->findChildren<QGridLayout*>();
 
             QString tempSubjectName;
             QString tempTeacherName;
-            for (int i = 0; i < subWidgets.size(); i++) {
-                tempSubjectName =  subWidgets[i]->itemAtPosition(0, 0)->widget()->property("currentText").toString();
-                tempTeacherName =  subWidgets[i]->itemAtPosition(1, 0)->widget()->property("currentText").toString();
-
-                QString tempData = tempSubjectName + " : " + tempTeacherName;
-                qDebug() << tempData;
+            for (int i = 0; i < subWidgets.size(); i+=2) {
+                data += "(";
+                QString tempData;
+                if (subWidgets[i]->itemAtPosition(0, 0)->widget()->isVisible()){
+                    tempSubjectName =  subWidgets[i]->itemAtPosition(0, 0)->widget()->property("currentText").toString();
+                    tempTeacherName =  subWidgets[i]->itemAtPosition(1, 0)->widget()->property("currentText").toString();
+                    tempData = tempSubjectName + ":" + tempTeacherName + "|";
+                    tempSubjectName =  subWidgets[i+1]->itemAtPosition(0, 0)->widget()->property("currentText").toString();
+                    tempTeacherName =  subWidgets[i+1]->itemAtPosition(1, 0)->widget()->property("currentText").toString();
+                    tempData += tempSubjectName + ":" + tempTeacherName  + "),";
+                    qDebug() << tempData;
+                }
+                else{
+                    tempSubjectName =  subWidgets[i]->itemAtPosition(0, 0)->widget()->property("currentText").toString();
+                    tempTeacherName =  subWidgets[i]->itemAtPosition(1, 0)->widget()->property("currentText").toString();
+                    tempData += tempSubjectName + ":" + tempTeacherName + "|";
+                    tempData += "~),";
+                    qDebug() << tempData;
+                }
+                data += tempData;
             }
+             data += "];";
         }
-
-        counter++;
+        data += "}";
+        //qDebug() << data;
     }
 }
 
@@ -362,6 +385,7 @@ void MainWindow::on_saveData_clicked()
     }
 
     saveData(QString("Teachers.txt"), teacherData);
+    saveGroupData();
 }
 
 void MainWindow::checkItem(itemCoordinates coords, QString senderName){

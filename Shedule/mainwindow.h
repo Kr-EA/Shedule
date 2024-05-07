@@ -40,6 +40,7 @@ public:
     void subjectDataSetup();
     void groupDataSetup();
     void teacherDataSetup();
+    void saveGroupData();
     ~MainWindow();
 
 private slots:
