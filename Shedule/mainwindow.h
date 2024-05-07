@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow
 public:
     QVector<QString> uids;
     QVector<QTableWidget*> groups;
+    QVector<QString> groupData;
     QVector<QString> subjectData;
     QVector<QString> teacherData;
     MainWindow(QWidget *parent = nullptr);

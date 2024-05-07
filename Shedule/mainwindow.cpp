@@ -217,9 +217,31 @@ void MainWindow::groupDataSetup(){
     ui->groups->setRowCount(1);
     ui->groups->setRowHeight(0, ui->groups->height());
     int counter = 0;
+
+
+
     for (QTableWidget* group : groups){
         ui->groups->setColumnWidth(counter, 950);
         ui->groups->setCellWidget(0, counter, group);
+
+        QWidget* temp;
+
+        for (int i = 1; i < 7; i++) {
+            temp = group->cellWidget(i, 1);
+
+            QList<QGridLayout*> subWidgets = temp->findChildren<QGridLayout*>();
+
+            QString tempSubjectName;
+            QString tempTeacherName;
+            for (int i = 0; i < subWidgets.size(); i++) {
+                tempSubjectName =  subWidgets[i]->itemAtPosition(0, 0)->widget()->property("currentText").toString();
+                tempTeacherName =  subWidgets[i]->itemAtPosition(1, 0)->widget()->property("currentText").toString();
+
+                QString tempData = tempSubjectName + " : " + tempTeacherName;
+                qDebug() << tempData;
+            }
+        }
+
         counter++;
     }
 }
@@ -366,7 +388,7 @@ void MainWindow::checkItem(itemCoordinates coords, QString senderName){
             alert.exec();
             alert.setVisible(true);
             QStringList temp = subjectData[coords.x].split(u' ');
-            ui->subjectsData->item(coords.x, coords.y)->setText(temp[2]);
+            ui->subjectsData->item(coords.x, coords.y)->setText(temp[3]);
         }
     }
 
@@ -378,7 +400,7 @@ void MainWindow::checkItem(itemCoordinates coords, QString senderName){
             alert.exec();
             alert.setVisible(true);
             QStringList temp = teacherData[coords.x].split(u' ');
-            ui->teachersData->item(coords.x, coords.y)->setText(temp[3]);
+            ui->teachersData->item(coords.x, coords.y)->setText(temp[4]);
         }
     }
     if (senderName == "Subject"){
@@ -564,6 +586,9 @@ void MainWindow::on_searchGroup_clicked()
     if (ui->searchGroupLine->isVisible()){
         ui->searchGroupLine->clear();
         ui->searchGroupLine->setVisible(false);
+        for (int i = 0; i < groups.size(); i++){
+            ui->groups->showColumn(i);
+        }
     }
     else{
         ui->searchGroupLine->setVisible(true);

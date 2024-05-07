@@ -36,6 +36,7 @@ QComboBox* groupCreator::setupTeacherComboBox(QString subject, QVector<QString> 
 }
 
 void groupCreator::setup() {
+    ui->group->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->group->setColumnWidth(1, 800);
     ui->group->verticalHeader()->setVisible(false);
     ui->group->horizontalHeader()->setVisible(false);
@@ -90,7 +91,8 @@ void groupCreator::setup() {
                 pairSelection->addWidget(dropDownTeachers, 1, 0);
                 QWidget* tableItem = new QWidget();
                 tableItem->setLayout(pairSelection);
-               day->setCellWidget(i, j, tableItem);
+
+                day->setCellWidget(i, j, tableItem);
 
                 connect(dropDownSubjects, &QComboBox::currentTextChanged, this, [this, dropDownSubjects, pairSelection, i, j, day](){
                     QGridLayout* temp = new QGridLayout;
