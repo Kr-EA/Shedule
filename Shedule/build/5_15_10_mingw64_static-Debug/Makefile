@@ -685,7 +685,7 @@ all: debug-all release-all  FORCE
 clean: debug-clean release-clean  FORCE
 distclean: debug-distclean release-distclean  FORCE
 	-$(DEL_FILE) Makefile
-	-$(DEL_FILE) A:\op\Shedule\build\5_15_10_mingw64_static-Debug\shedule_plugin_import.cpp .qmake.stash
+	-$(DEL_FILE) C:\Users\afyfl\Desktop\test\Shedule\build\5_15_10_mingw64_static-Debug\shedule_plugin_import.cpp .qmake.stash
 
 debug-mocclean:
 	$(MAKE) -f $(MAKEFILE).Debug mocclean

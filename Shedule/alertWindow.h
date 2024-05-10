@@ -4,7 +4,7 @@
 #include <QDialog>
 
 namespace Ui {
-class alertWindow;
+class NoNoNo;
 }
 
 class alertWindow : public QDialog
@@ -20,7 +20,7 @@ private slots:
     void on_pushButton_2_clicked();
 
 private:
-    Ui::alertWindow *ui;
+    Ui::NoNoNo *ui;
 };
 
 #endif // ALERTWINDOW_H

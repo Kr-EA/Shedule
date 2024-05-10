@@ -24,7 +24,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_tDialog_t {
     QByteArrayData data[9];
-    char stringdata0[125];
+    char stringdata0[124];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,13 +40,13 @@ QT_MOC_LITERAL(3, 38, 5), // "value"
 QT_MOC_LITERAL(4, 44, 17), // "on_cancel_clicked"
 QT_MOC_LITERAL(5, 62, 18), // "on_confirm_clicked"
 QT_MOC_LITERAL(6, 81, 16), // "subjectsListSlot"
-QT_MOC_LITERAL(7, 98, 17), // "QVector<QString>&"
-QT_MOC_LITERAL(8, 116, 8) // "tempData"
+QT_MOC_LITERAL(7, 98, 16), // "QVector<QString>"
+QT_MOC_LITERAL(8, 115, 8) // "tempData"
 
     },
     "tDialog\0on_ratingSetter_valueChanged\0"
     "\0value\0on_cancel_clicked\0on_confirm_clicked\0"
-    "subjectsListSlot\0QVector<QString>&\0"
+    "subjectsListSlot\0QVector<QString>\0"
     "tempData"
 };
 #undef QT_MOC_LITERAL
@@ -91,6 +91,17 @@ void tDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 3: _t->subjectsListSlot((*reinterpret_cast< QVector<QString>(*)>(_a[1]))); break;
         default: ;
         }
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        switch (_id) {
+        default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+        case 3:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
+            case 0:
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QVector<QString> >(); break;
+            }
+            break;
+        }
     }
 }
 
@@ -128,7 +139,7 @@ int tDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         _id -= 4;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         if (_id < 4)
-            *reinterpret_cast<int*>(_a[0]) = -1;
+            qt_static_metacall(this, _c, _id, _a);
         _id -= 4;
     }
     return _id;

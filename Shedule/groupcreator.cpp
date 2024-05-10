@@ -22,12 +22,12 @@ groupCreator::~groupCreator()
     delete ui;
 }
 
-QComboBox* groupCreator::setupTeacherComboBox(QString subject, QVector<QString> teachers){
+void groupCreator::setupTeacherComboBox(QString subject, QVector<QString> teachers, QComboBox* oldDropDownTeachers){
+    oldDropDownTeachers->clear();
     QStringList teacherVars;
-    QComboBox* dropDownTeachers = new QComboBox();
     QVector<QString> correctTeachers{};
     if (subject == "-"){
-        dropDownTeachers->addItem("-");
+        oldDropDownTeachers->addItem("-");
     }
     for (QString teacher : teachers){
         if (teacher.toStdString().find(subject.toStdString()) != 18446744073709551615){
@@ -35,8 +35,7 @@ QComboBox* groupCreator::setupTeacherComboBox(QString subject, QVector<QString> 
         }
     }
     teacherVars = QStringList::fromVector(correctTeachers);
-    dropDownTeachers->addItems(teacherVars);
-    return dropDownTeachers;
+    oldDropDownTeachers->addItems(teacherVars);
 }
 
 void groupCreator::setup() {
@@ -55,7 +54,6 @@ void groupCreator::setup() {
     for (int i = 1; i < 7; i++){
         ui->group->setRowHeight(i, (this->height()+1500)/6);
     }
-
 
     this->setWindowTitle(QString::fromStdString("Cоздание группы"));
 
@@ -82,6 +80,7 @@ void groupCreator::setup() {
                 QGridLayout* pairSelection = new QGridLayout;
 
                 QComboBox* dropDownSubjects = new QComboBox();
+                QComboBox* dropDownTeachers = new QComboBox();
 
                 QVector<QString> vars = subjects;
                 vars.push_back(QString::fromStdString("-"));
@@ -89,33 +88,62 @@ void groupCreator::setup() {
                 dropDownSubjects->addItems(subjectVariants);
 
                 dropDownSubjects->setProperty("currentText", "-");
-                QComboBox* dropDownTeachers = new QComboBox;
-                dropDownTeachers = setupTeacherComboBox(dropDownSubjects->property("currentText").toString(), teachers);
+                setupTeacherComboBox(dropDownSubjects->property("currentText").toString(), teachers, dropDownTeachers);
+
+                connect(dropDownSubjects, &QComboBox::currentTextChanged, this, [this, dropDownSubjects, pairSelection, i, j, z, day, dropDownTeachers](){
+                    QGridLayout* temp = new QGridLayout;
+                    dropDownTeachers->blockSignals(true);
+                    setupTeacherComboBox(dropDownSubjects->property("currentText").toString(), teachers, dropDownTeachers);
+                    dropDownTeachers->blockSignals(false);
+
+                    temp->addWidget(dropDownSubjects, 0,  0);
+                    temp->addWidget(dropDownTeachers, 1, 0);
+
+                    QWidget* tableItem = new QWidget();
+                    tableItem->setLayout(temp);
+                    day->setCellWidget(i, j, tableItem);
+
+                    if (mergingData[z-1][i-1] && j != 1){
+                        day->cellWidget(i, 1)->layout()->itemAt(0)->widget()->blockSignals(true);
+                        day->cellWidget(i, 1)->layout()->itemAt(1)->widget()->blockSignals(true);
+
+                        day->cellWidget(i, 1)->layout()->itemAt(0)->widget()->setProperty("currentText", day->cellWidget(i, 0)->layout()->itemAt(0)->widget()->property("currentText").toString());
+                        day->cellWidget(i, 1)->layout()->itemAt(1)->widget()->setProperty("currentText", day->cellWidget(i, 0)->layout()->itemAt(1)->widget()->property("currentText").toString());
+
+                        day->cellWidget(i, 1)->layout()->itemAt(0)->widget()->blockSignals(false);
+                        day->cellWidget(i, 1)->layout()->itemAt(1)->widget()->blockSignals(false);
+                    }
+                });
+
+                connect(dropDownTeachers, &QComboBox::currentTextChanged, this, [&, this, dropDownTeachers, pairSelection, i, j, z, day](){
+                    if (mergingData[z-1][i-1] && j != 1){
+                        day->blockSignals(true);
+                        static_cast<QComboBox*>(day->cellWidget(i, 1)->layout()->itemAt(1)->widget())->clear();
+                        setupTeacherComboBox(day->cellWidget(i, 0)->layout()->itemAt(0)->widget()->property("currentText").toString(), teachers, static_cast<QComboBox*>(day->cellWidget(i, 1)->layout()->itemAt(1)->widget()));
+                        day->cellWidget(i, 1)->layout()->itemAt(1)->widget()->setProperty("currentText", day->cellWidget(i, 0)->layout()->itemAt(1)->widget()->property("currentText").toString());
+                        day->blockSignals(false);
+                        qDebug() << day->cellWidget(i, 0)->layout()->itemAt(1)->widget()->property("currentText");
+                        qDebug() << day->cellWidget(i, 1)->layout()->itemAt(1)->widget()->property("currentText");
+                    }
+                });
+
                 pairSelection->addWidget(dropDownSubjects, 0, 0);
                 pairSelection->addWidget(dropDownTeachers, 1, 0);
                 QWidget* tableItem = new QWidget();
                 tableItem->setLayout(pairSelection);
 
                 day->setCellWidget(i, j, tableItem);
-
-                connect(dropDownSubjects, &QComboBox::currentTextChanged, this, [this, dropDownSubjects, pairSelection, i, j, day](){
-                    QGridLayout* temp = new QGridLayout;
-                    QComboBox*  newDropDownTeachers = new QComboBox();
-                    newDropDownTeachers = setupTeacherComboBox(dropDownSubjects->property("currentText").toString(), teachers);
-
-                    temp->addWidget(dropDownSubjects, 0,  0);
-                    temp->addWidget(newDropDownTeachers, 1, 0);
-
-                    QWidget* tableItem = new QWidget();
-                    tableItem->setLayout(temp);
-                    day->setCellWidget(i, j, tableItem);
-                });
             }
             QPushButton* mergeAndSplit = new QPushButton("Объединить");
-            connect(mergeAndSplit, &QPushButton::clicked, this, [&, mergeAndSplit, i, day](){
+            connect(mergeAndSplit, &QPushButton::clicked, this, [&, mergeAndSplit, i, day, z](){
                 if(mergeAndSplit->text() == "Объединить"){
                     mergeAndSplit->setText("Разъеденить");
                     day->blockSignals(true);
+                    mergingData[z-1][i-1] = true;
+                    day->cellWidget(i, 0)->layout()->itemAt(0)->widget()->setProperty("currentText", "-");
+                    day->cellWidget(i, 0)->layout()->itemAt(1)->widget()->setProperty("currentText", "-");
+                    day->cellWidget(i, 1)->layout()->itemAt(0)->widget()->setProperty("currentText", day->cellWidget(i, 0)->layout()->itemAt(0)->widget()->property("currentText"));
+                    day->cellWidget(i, 1)->layout()->itemAt(1)->widget()->setProperty("currentText", day->cellWidget(i, 0)->layout()->itemAt(1)->widget()->property("currentText"));
                     day->cellWidget(i, 1)->setVisible(false);
                     day->setSpan(i, 0, 1, 2);
                     day->cellWidget(i, 0)->setFixedSize(day->cellWidget(i, 0)->width()*2, day->cellWidget(i, 0)->height());
@@ -123,9 +151,12 @@ void groupCreator::setup() {
                 }
                 else {
                     mergeAndSplit->setText("Объединить");
-                    day->cellWidget(i, 1)->setVisible(true);
-                    day->cellWidget(i, 0)->setFixedSize(day->cellWidget(i, 0)->width()/2, day->cellWidget(i, 0)->height());
+                    mergingData[z-1][i-1] = false;
                     day->setSpan(i, 0, 1, 1);
+                    day->cellWidget(i, 0)->setFixedSize(day->cellWidget(i, 0)->width()/2, day->cellWidget(i, 0)->height());
+                    day->cellWidget(i, 1)->setVisible(true);
+                    day->cellWidget(i, 1)->layout()->itemAt(0)->widget()->setProperty("currentText", "-");
+                    day->cellWidget(i, 1)->layout()->itemAt(1)->widget()->setProperty("currentText", "-");
                 }
             });
             day->setCellWidget(i, 2, mergeAndSplit);

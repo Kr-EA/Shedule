@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->returnAllSubjects->setVisible(false);
     ui->searchGroupLine->setVisible(false);
     this->setWindowTitle(QString::fromStdString("Шедуля"));
+
     connect(this, &MainWindow::itemChanged, this, &MainWindow::checkItem);
 }
 
@@ -171,6 +172,9 @@ void MainWindow::teacherDataSetup(){
                 }
                 else if (k == 7){
                     QPushButton* addButton = new QPushButton("Добавить предмет");
+                    QFont temp = addButton->font();
+                    temp.setPointSize(10);
+                    addButton->setFont(temp);
                     connect(addButton, &QPushButton::clicked, this, [&, addButton, i, size](){
                         teacherDataSetup();
                         toggleAllRows(true, ui->subjectsData, subjectData);
@@ -226,47 +230,60 @@ void MainWindow::groupDataSetup(){
     }
 }
 void MainWindow::saveGroupData(){
+    groupData.clear();
     for (QTableWidget* group : groups){
         QString data;
         data = generateUID(uids) + "@";
         data += group->item(0, 0)->text() + "@{";
-
-        QWidget* temp;
-
-        for (int i = 1; i < 7; i++) {
-            data += "[";
-            temp = group->cellWidget(i, 1);
-
-            QList<QGridLayout*> subWidgets = temp->findChildren<QGridLayout*>();
-
+        std::replace(data.begin(), data.end(), ' ', '_');
+        QList<QTableWidget*> temp = group->findChildren<QTableWidget*>();
+        for (int i = 0; i < 6; i++) {
+            QString temp1;
+            QString temp2;
             QString tempSubjectName;
             QString tempTeacherName;
-            for (int i = 0; i < subWidgets.size(); i+=2) {
-                data += "(";
+            data += "[";
+            for (int j = 1; j < 5; j++) {
                 QString tempData;
-                if (subWidgets[i]->itemAtPosition(0, 0)->widget()->isVisible()){
-                    tempSubjectName =  subWidgets[i]->itemAtPosition(0, 0)->widget()->property("currentText").toString();
-                    tempTeacherName =  subWidgets[i]->itemAtPosition(1, 0)->widget()->property("currentText").toString();
-                    tempData = tempSubjectName + ":" + tempTeacherName + "|";
-                    tempSubjectName =  subWidgets[i+1]->itemAtPosition(0, 0)->widget()->property("currentText").toString();
-                    tempTeacherName =  subWidgets[i+1]->itemAtPosition(1, 0)->widget()->property("currentText").toString();
-                    tempData += tempSubjectName + ":" + tempTeacherName  + "),";
-                    qDebug() << tempData;
+                tempSubjectName = temp[i]->cellWidget(j, 0)->layout()->itemAt(0)->widget()->property("currentText").toString();
+                tempTeacherName = temp[i]->cellWidget(j, 0)->layout()->itemAt(1)->widget()->property("currentText").toString();
+
+                temp1 = tempSubjectName + ":" + tempTeacherName;
+
+                tempSubjectName = temp[i]->cellWidget(j, 1)->layout()->itemAt(0)->widget()->property("currentText").toString();
+                tempTeacherName = temp[i]->cellWidget(j, 1)->layout()->itemAt(1)->widget()->property("currentText").toString();
+
+                temp2 = tempSubjectName + ":" + tempTeacherName;
+
+                if (temp1 == temp2){
+                    if (j == 4){
+                        tempData = temp1 + "|~)";
+                    }
+                    else {
+                        tempData = temp1 + "|~),";
+                    }
                 }
-                else{
-                    tempSubjectName =  subWidgets[i]->itemAtPosition(0, 0)->widget()->property("currentText").toString();
-                    tempTeacherName =  subWidgets[i]->itemAtPosition(1, 0)->widget()->property("currentText").toString();
-                    tempData += tempSubjectName + ":" + tempTeacherName + "|";
-                    tempData += "~),";
-                    qDebug() << tempData;
+                else {
+                    if (j == 4){
+                        tempData = temp1 + "|" + temp2 + ")";
+                    }
+                    else {
+                        tempData = temp1 + "|" + temp2 + "),";
+                    }
                 }
-                data += tempData;
+                data += "(" + tempData;
             }
-             data += "];";
+            if (i != 5){
+                data += "];";
+            }
+            else {
+                data += "]";
+            }
         }
         data += "}";
-        //qDebug() << data;
+        groupData.push_back(data);
     }
+    saveData("Groups.txt", groupData);
 }
 
 void MainWindow::subjectDataSetup(){
@@ -628,6 +645,7 @@ void MainWindow::on_addGroup_clicked()
     adder->setup();
     adder->setModal(true);
     adder->setVisible(true);
+    //adder->showFullScreen();
     adder->exec();
     if (adder->isWindowWorkFinishedCorrectly){
         groups.push_back(adder->data);

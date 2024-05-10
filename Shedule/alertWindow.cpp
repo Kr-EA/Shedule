@@ -3,7 +3,7 @@
 
 alertWindow::alertWindow(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::alertWindow)
+    , ui(new Ui::NoNoNo)
 {
     ui->setupUi(this);
     this->setWindowTitle(QString::fromStdString("Предупреждение"));

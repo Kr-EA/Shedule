@@ -21,10 +21,9 @@ public:
     QTableWidget* data;
     QVector<QString> subjects;
     QVector<QString> teachers;
-    QComboBox* setupTeacherComboBox(QString, QVector<QString>);
+    void setupTeacherComboBox(QString, QVector<QString>, QComboBox*);
     explicit groupCreator(QWidget *parent = nullptr);
     ~groupCreator();
-
     void setup();
 
 private slots:
@@ -33,6 +32,7 @@ private slots:
     void on_cancelButton_clicked();
 
 private:
+    bool mergingData[6][4]{};
     Ui::groupCreator *ui;
 };
 
